@@ -1,0 +1,86 @@
+# skills
+
+Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skill é um arquivo de instruções (`SKILL.md`) autocontido — copie para o diretório de skills do seu agente e use.
+
+## Skills disponíveis
+
+| Skill | O que faz | Trigger |
+|-------|-----------|---------|
+| [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean (PicoCSS + Bootstrap Icons), tema escuro, self-contained, e abre no navegador. | `/htmlize` |
+
+---
+
+## htmlize
+
+Pega um arquivo markdown, doc ou conteúdo colado e gera **um único arquivo `.html`** — infográfico clean, tema escuro, com hero, cards de estatística, grid de cards, timeline, callouts e blocos de código. Sem build: só PicoCSS + Bootstrap Icons via CDN, CSS inline. Abre no navegador automaticamente.
+
+- `skills/htmlize/SKILL.md` — o instruction file (a "receita" do estilo).
+- `skills/htmlize/template.html` — esqueleto pronto com todo o CSS e seções placeholder.
+
+### Exemplo de uso
+
+```
+/htmlize docs/meu-documento.md
+```
+
+ou em linguagem natural:
+
+```
+htmlize esse arquivo: docs/meu-documento.md
+```
+
+O agente lê o conteúdo, mapeia cada parte (números → cards de stat, passos → timeline, riscos → callouts) e abre o `.html` no navegador.
+
+---
+
+## Instalação
+
+### Claude Code — global (todos os projetos)
+
+```bash
+git clone https://github.com/d3m4/skills
+```
+
+Copie a pasta da skill para o diretório global de skills do Claude:
+
+**Linux/macOS:**
+```bash
+cp -r skills/skills/htmlize ~/.claude/skills/htmlize
+```
+
+**Windows (PowerShell):**
+```powershell
+Copy-Item -Recurse skills\skills\htmlize "$env:USERPROFILE\.claude\skills\htmlize"
+```
+
+Use com `/htmlize` ou "htmlize esse arquivo".
+
+### Claude Code — por projeto
+
+Copie para a pasta `.claude/skills` do projeto:
+
+```bash
+cp -r skills/skills/htmlize .claude/skills/htmlize
+```
+
+### Codex / outros agentes
+
+O `SKILL.md` é um instruction file portátil — não depende de runtime do Claude. Aponte o agente para ele:
+
+- **Codex**: copie `skills/htmlize/SKILL.md` para o diretório de skills do Codex (ex.: `~/.agents/skills/htmlize/`) ou referencie no `AGENTS.md`.
+- **Outros agentes**: cole o conteúdo do `SKILL.md` no prompt de sistema, ou referencie o arquivo no diretório de instruções equivalente do seu agente.
+
+A "receita" (CDNs, tema, componentes, variações de comando por SO) está toda no `SKILL.md` — qualquer agente capaz de ler arquivos e rodar comandos consegue executá-la.
+
+---
+
+## Estrutura do repo
+
+```
+skills/
+├── README.md
+└── skills/
+    └── htmlize/
+        ├── SKILL.md       # instruction file (receita do estilo htmlize)
+        └── template.html  # esqueleto com CSS pronto + seções placeholder
+```
