@@ -2,7 +2,7 @@
 <html lang="pt-BR" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>{{TITULO}}</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" />
@@ -14,11 +14,24 @@
       --warn: #ffb454;
       --danger: #ff7b72;
       --good: #7ee0c0;
+      --maxw: 1320px;     /* teto do layout em telas grandes (1440p) */
+      --reading: 72ch;    /* largura confortável de leitura do texto corrido */
+      --toc-w: 210px;     /* largura do sumário lateral no desktop */
     }
+    html { scroll-behavior: smooth; }
     body { --pico-spacing: 1rem; }
-    main.container { max-width: 1080px; padding-block: 0; }
 
-    /* Hero */
+    /* Largura fluida: usa quase toda a tela até um teto, centralizado */
+    .wrap { width: min(var(--maxw), 92vw); margin-inline: auto; }
+
+    /* Barra de progresso de leitura (topo, fixa) */
+    .progress {
+      position: fixed; inset: 0 auto auto 0; height: 3px; width: 0; z-index: 1000;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .08s linear;
+    }
+
+    /* Hero (full-bleed; conteúdo interno alinhado ao .wrap) */
     .hero {
       background: radial-gradient(1200px 400px at 20% -10%, rgba(94,158,255,.22), transparent 60%),
                   radial-gradient(900px 360px at 90% 0%, rgba(126,224,192,.14), transparent 55%);
@@ -26,8 +39,8 @@
       padding: 3rem 0 2rem;
       margin-bottom: 2.5rem;
     }
-    .hero h1 { margin-bottom: .25rem; font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -.02em; }
-    .hero .sub { color: var(--pico-muted-color); font-size: 1.1rem; margin: 0; }
+    .hero h1 { margin-bottom: .25rem; font-size: clamp(1.7rem, 4vw, 3rem); letter-spacing: -.02em; }
+    .hero .sub { color: var(--pico-muted-color); font-size: clamp(.95rem, 1.5vw, 1.1rem); margin: 0; max-width: var(--reading); }
     .pills { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
     .pill {
       display: inline-flex; align-items: center; gap: .4rem;
@@ -38,25 +51,35 @@
     }
     .pill.ok { color: var(--good); border-color: rgba(126,224,192,.4); }
 
+    /* Layout: mobile-first em coluna única; sumário escondido por padrão */
+    .layout { padding-bottom: 2rem; }
+    main { min-width: 0; }            /* impede grids de estourar a coluna */
+    .toc { display: none; }
+
+    /* Texto corrido limitado à largura de leitura (grids ocupam tudo) */
+    main > section > p,
+    main > section > .callout p,
+    main > p { max-width: var(--reading); }
+
     /* Section headers */
-    section { margin-bottom: 3rem; }
+    section { margin-bottom: 3rem; scroll-margin-top: 1.5rem; }
     .kicker { display: flex; align-items: center; gap: .6rem; margin-bottom: 1rem; }
     .kicker i { font-size: 1.4rem; color: var(--accent); }
-    .kicker h2 { margin: 0; font-size: 1.5rem; }
+    .kicker h2 { margin: 0; font-size: clamp(1.2rem, 2.2vw, 1.5rem); }
 
     /* Stats */
-    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1rem; }
     .stat {
       border: 1px solid var(--pico-muted-border-color); border-radius: 12px;
       padding: 1.25rem; background: var(--pico-card-background-color); text-align: center;
     }
-    .stat .num { font-size: 2rem; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat .num { font-size: clamp(1.6rem, 3vw, 2rem); font-weight: 800; color: var(--accent); line-height: 1; }
     .stat .num.warn { color: var(--warn); }
     .stat .num.danger { color: var(--danger); }
     .stat .lbl { color: var(--pico-muted-color); font-size: .85rem; margin-top: .4rem; }
 
     /* Cards grid */
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+    .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 1rem; }
     .card {
       border: 1px solid var(--pico-muted-border-color); border-radius: 12px;
       padding: 1.25rem; background: var(--pico-card-background-color);
@@ -110,12 +133,47 @@
     .muted-foot { color: var(--pico-muted-color); font-size: .82rem; text-align: center; padding: 2rem 0 3rem; }
     .tag { font-size: .7rem; padding: .12rem .5rem; border-radius: 5px; background: rgba(126,224,192,.15); color: var(--good); margin-left: .4rem; }
     .tag.v2 { background: rgba(255,180,84,.15); color: var(--warn); }
+
+    /* Sumário lateral (TOC) */
+    .toc nav { display: flex; flex-direction: column; gap: .15rem; }
+    .toc .toc-title { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--pico-muted-color); margin-bottom: .6rem; }
+    .toc a {
+      color: var(--pico-muted-color); text-decoration: none; font-size: .85rem;
+      padding: .3rem .6rem; border-left: 2px solid transparent; border-radius: 0 6px 6px 0;
+      line-height: 1.3;
+    }
+    .toc a:hover { color: var(--pico-color); background: var(--pico-card-background-color); }
+    .toc a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(94,158,255,.08); }
+
+    /* >= 1100px: ativa o sumário lateral à direita (some abaixo disso) */
+    @media (min-width: 1100px) {
+      .layout {
+        display: grid; grid-template-columns: minmax(0, 1fr) var(--toc-w);
+        gap: 2.5rem; align-items: start;
+      }
+      .toc { display: block; position: sticky; top: 1.5rem; align-self: start; }
+    }
+
+    /* Celular: respiro menor */
+    @media (max-width: 560px) {
+      .hero { padding: 2rem 0 1.5rem; }
+      section { margin-bottom: 2.25rem; }
+      .stat, .card, .callout, .decision { padding: 1rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .progress { transition: none; }
+    }
   </style>
 </head>
 <body>
-  <!-- ============ HERO ============ -->
+  <!-- ============ BARRA DE PROGRESSO ============ -->
+  <div class="progress" id="progress"></div>
+
+  <!-- ============ HERO (full-bleed) ============ -->
   <header class="hero">
-    <div class="container">
+    <div class="wrap">
       <h1><i class="bi bi-{{ICONE_HERO}}" style="color:var(--accent)"></i> {{TITULO}}</h1>
       <p class="sub">{{SUBTITULO}}</p>
       <div class="pills">
@@ -126,69 +184,111 @@
     </div>
   </header>
 
-  <main class="container">
+  <!-- ============ LAYOUT: conteúdo + sumário lateral ============ -->
+  <div class="layout wrap">
+    <main>
 
-    <!-- ============ SEÇÃO COM STATS ============ -->
-    <section>
-      <div class="kicker"><i class="bi bi-bar-chart-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
-      <p>{{PARAGRAFO_INTRO}}</p>
-      <div class="stats">
-        <div class="stat"><div class="num">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
-        <div class="stat"><div class="num warn">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
-        <div class="stat"><div class="num danger">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
-      </div>
-    </section>
-
-    <!-- ============ GRID DE CARDS ============ -->
-    <section>
-      <div class="kicker"><i class="bi bi-grid-1x2-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
-      <div class="grid-cards">
-        <div class="card"><h3><i class="bi bi-stars"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
-        <div class="card solved"><h3><i class="bi bi-check2-circle"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
-        <div class="card"><h3><i class="bi bi-lightning-fill"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
-      </div>
-    </section>
-
-    <!-- ============ BLOCO DE CÓDIGO ============ -->
-    <section>
-      <div class="kicker"><i class="bi bi-code-slash"></i><h2>{{TITULO_SECAO}}</h2></div>
-      <pre><code>{{CODIGO}}</code></pre>
-    </section>
-
-    <!-- ============ CALLOUT (crítico/atenção/ok) ============ -->
-    <section>
-      <div class="callout">
-        <h3><i class="bi bi-exclamation-triangle-fill"></i> {{TITULO_CALLOUT}}</h3>
-        <p>{{TEXTO_CALLOUT}}</p>
-      </div>
-    </section>
-
-    <!-- ============ TIMELINE / FASES ============ -->
-    <section>
-      <div class="kicker"><i class="bi bi-diagram-3-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
-      <div class="timeline">
-        <div class="phase">
-          <h3><span class="num-badge">Fase 1</span> · {{NOME_FASE}} <i class="bi bi-shield"></i></h3>
-          <ul class="slices">
-            <li><code>1.0</code> {{ETAPA}}</li>
-            <li><code>1.1</code> {{ETAPA}}</li>
-          </ul>
+      <!-- ====== SEÇÃO COM STATS (cada section TEM id, p/ o sumário) ====== -->
+      <section id="visao-geral">
+        <div class="kicker"><i class="bi bi-bar-chart-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
+        <p>{{PARAGRAFO_INTRO}}</p>
+        <div class="stats">
+          <div class="stat"><div class="num">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
+          <div class="stat"><div class="num warn">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
+          <div class="stat"><div class="num danger">{{NUMERO}}</div><div class="lbl">{{LABEL}}</div></div>
         </div>
-        <div class="phase">
-          <h3><span class="num-badge">Fase 2</span> · {{NOME_FASE}} <i class="bi bi-gear-wide-connected"></i></h3>
-          <ul class="slices">
-            <li><code>2.0</code> {{ETAPA}}</li>
-            <li><code>2.1</code> {{ETAPA}}</li>
-          </ul>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- ============ RODAPÉ / PROVENIÊNCIA ============ -->
-    <p class="muted-foot">
-      Gerado a partir de <code>{{ARQUIVO_ORIGEM}}</code><br/>
-      {{NOTA_RODAPE}} · PicoCSS + Bootstrap Icons
-    </p>
-  </main>
+      <!-- ====== GRID DE CARDS ====== -->
+      <section id="destaques">
+        <div class="kicker"><i class="bi bi-grid-1x2-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
+        <div class="grid-cards">
+          <div class="card"><h3><i class="bi bi-stars"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
+          <div class="card solved"><h3><i class="bi bi-check2-circle"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
+          <div class="card"><h3><i class="bi bi-lightning-fill"></i> {{TITULO_CARD}}</h3><p>{{TEXTO_CARD}}</p></div>
+        </div>
+      </section>
+
+      <!-- ====== BLOCO DE CÓDIGO ====== -->
+      <section id="codigo">
+        <div class="kicker"><i class="bi bi-code-slash"></i><h2>{{TITULO_SECAO}}</h2></div>
+        <pre><code>{{CODIGO}}</code></pre>
+      </section>
+
+      <!-- ====== CALLOUT (crítico / .ok / .warn) ====== -->
+      <section id="atencao">
+        <div class="callout">
+          <h3><i class="bi bi-exclamation-triangle-fill"></i> {{TITULO_CALLOUT}}</h3>
+          <p>{{TEXTO_CALLOUT}}</p>
+        </div>
+      </section>
+
+      <!-- ====== TIMELINE / FASES ====== -->
+      <section id="plano">
+        <div class="kicker"><i class="bi bi-diagram-3-fill"></i><h2>{{TITULO_SECAO}}</h2></div>
+        <div class="timeline">
+          <div class="phase">
+            <h3><span class="num-badge">Fase 1</span> · {{NOME_FASE}} <i class="bi bi-shield"></i></h3>
+            <ul class="slices">
+              <li><code>1.0</code> {{ETAPA}}</li>
+              <li><code>1.1</code> {{ETAPA}}</li>
+            </ul>
+          </div>
+          <div class="phase">
+            <h3><span class="num-badge">Fase 2</span> · {{NOME_FASE}} <i class="bi bi-gear-wide-connected"></i></h3>
+            <ul class="slices">
+              <li><code>2.0</code> {{ETAPA}}</li>
+              <li><code>2.1</code> {{ETAPA}}</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ====== RODAPÉ / PROVENIÊNCIA ====== -->
+      <p class="muted-foot">
+        Gerado a partir de <code>{{ARQUIVO_ORIGEM}}</code><br/>
+        {{NOTA_RODAPE}} · PicoCSS + Bootstrap Icons
+      </p>
+    </main>
+
+    <!-- ====== SUMÁRIO LATERAL (um link por section[id]) ====== -->
+    <aside class="toc">
+      <nav>
+        <span class="toc-title">Nesta página</span>
+        <a href="#visao-geral">{{TITULO_SECAO}}</a>
+        <a href="#destaques">{{TITULO_SECAO}}</a>
+        <a href="#codigo">{{TITULO_SECAO}}</a>
+        <a href="#atencao">{{TITULO_SECAO}}</a>
+        <a href="#plano">{{TITULO_SECAO}}</a>
+      </nav>
+    </aside>
+  </div>
+
+  <!-- ============ SCRIPT MÍNIMO: progresso + link ativo ============ -->
+  <script>
+    // Barra de progresso de scroll
+    const bar = document.getElementById('progress');
+    const updateBar = () => {
+      const el = document.documentElement;
+      const max = el.scrollHeight - el.clientHeight;
+      bar.style.width = (max > 0 ? (el.scrollTop / max) * 100 : 0) + '%';
+    };
+    addEventListener('scroll', updateBar, { passive: true });
+    addEventListener('resize', updateBar);
+    updateBar();
+
+    // Destaca o link do sumário da seção visível
+    const links = [...document.querySelectorAll('.toc a')];
+    const byId = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          links.forEach(a => a.classList.remove('active'));
+          byId.get(e.target.id)?.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    document.querySelectorAll('main section[id]').forEach(s => obs.observe(s));
+  </script>
 </body>
 </html>

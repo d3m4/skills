@@ -6,13 +6,13 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 
 | Skill | O que faz | Trigger |
 |-------|-----------|---------|
-| [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean (PicoCSS + Bootstrap Icons), tema escuro, self-contained, e abre no navegador. | `/htmlize` |
+| [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
 
 ---
 
 ## htmlize
 
-Pega um arquivo markdown, doc ou conteúdo colado e gera **um único arquivo `.html`** — infográfico clean, tema escuro, com hero, cards de estatística, grid de cards, timeline, callouts e blocos de código. Sem build: só PicoCSS + Bootstrap Icons via CDN, CSS inline. Abre no navegador automaticamente.
+Pega um arquivo markdown, doc ou conteúdo colado e gera **um único arquivo `.html`** — infográfico clean, tema escuro, com hero, cards de estatística, grid de cards, timeline, callouts e blocos de código. Totalmente **responsivo** (celular, tablet e PC): largura fluida `min(1320px, 92vw)` que aproveita monitores grandes (1440p) sem esticar demais o texto (limitado a ~72 caracteres/linha), tipografia fluida com `clamp()`, **sumário lateral** sticky que some em telas estreitas e **barra de progresso** de leitura. Sem build: só PicoCSS + Bootstrap Icons via CDN, CSS e um script mínimo inline. Abre no navegador automaticamente.
 
 - `skills/htmlize/SKILL.md` — o instruction file (a "receita" do estilo).
 - `skills/htmlize/template.html` — esqueleto pronto com todo o CSS e seções placeholder.
