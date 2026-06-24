@@ -7,6 +7,29 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 | Skill | O que faz | Trigger |
 |-------|-----------|---------|
 | [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
+| [`discuta-comigo`](skills/discuta-comigo/) | Refina uma ideia, decisão ou problema junto com você em rodadas de 4 perguntas de múltipla escolha, perguntando ao fim de cada rodada se deve continuar perguntando ou já propor — só apresenta a proposta quando você libera. | `/discuta-comigo` |
+
+---
+
+## discuta-comigo
+
+Em vez de uma resposta imediata, conduz uma **conversa estruturada de descoberta**: você passa a pergunta/tema inicial e o agente faz **rodadas de 4 perguntas de múltipla escolha** (foco em propósito, restrições, critérios e trade-offs, cada uma liderada por uma recomendação). Ao fim de **toda** rodada, vem a **pergunta-ponte**: mais 4 perguntas ou já propor? Só depois que você libera é que ele apresenta o desenho fechado (2–3 abordagens com trade-offs e recomendação). Ótimo pra clarear requisitos antes de qualquer implementação.
+
+- `skills/discuta-comigo/SKILL.md` — o instruction file (o processo completo).
+
+### Exemplo de uso
+
+```
+/discuta-comigo quero montar um home lab para estudar kubernetes
+```
+
+ou em linguagem natural:
+
+```
+discuta comigo: qual stack usar pra um SaaS de notas fiscais?
+```
+
+O agente analisa o contexto disponível, faz a primeira rodada de 4 perguntas e segue refinando até você pedir a proposta.
 
 ---
 
@@ -80,7 +103,9 @@ A "receita" (CDNs, tema, componentes, variações de comando por SO) está toda 
 skills/
 ├── README.md
 └── skills/
-    └── htmlize/
-        ├── SKILL.md       # instruction file (receita do estilo htmlize)
-        └── template.html  # esqueleto com CSS pronto + seções placeholder
+    ├── htmlize/
+    │   ├── SKILL.md       # instruction file (receita do estilo htmlize)
+    │   └── template.html  # esqueleto com CSS pronto + seções placeholder
+    └── discuta-comigo/
+        └── SKILL.md       # instruction file (processo de descoberta em rodadas)
 ```
