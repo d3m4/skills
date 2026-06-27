@@ -22,9 +22,14 @@ Não responda nem proponha de cara. Primeiro **entenda** — através de rodadas
 
 3. **Incorpore as respostas.** Releia tudo (inclusive os textos livres), ajuste seu entendimento e **resuma em 1–2 linhas** o que mudou. Dúvida nova e importante vira pergunta da próxima rodada.
 
-4. **Pergunta-ponte (obrigatória, chamada SEPARADA).** Depois do bloco de 4, faça **uma chamada nova** do seletor com **uma única pergunta** e 2 opções: **"Mais 4 perguntas"** e **"Já pode propor"**. Nunca enfie a ponte como 5ª opção do bloco anterior. Quando o entendimento já estiver maduro (em geral após 2–3 rodadas), coloque **"Já pode propor" como 1ª opção marcada "(Recomendado)"**.
-   - "Mais 4 perguntas" → volte ao passo 2 com **4 perguntas novas** (nunca repita as já respondidas).
-   - "Já pode propor" → vá ao passo 5.
+4. **Pergunta-ponte (obrigatória, chamada SEPARADA).** Depois do bloco de 4, faça **uma chamada nova** do seletor com **uma única pergunta**. Em vez de um genérico "mais 4 perguntas", **identifique os 2 maiores gaps** que ainda restam no seu entendimento e ofereça-os como **direções concretas e nomeadas** (você dirige, não o usuário). As opções:
+   - **Mais 4 sobre {gap A}** → o tema mais importante que ainda ficou em aberto (descreva o gap em poucas palavras, ex.: "Mais 4 sobre orçamento e prazo").
+   - **Mais 4 sobre {gap B}** → o segundo gap mais relevante.
+   - **Já pode propor** → encerra as perguntas e vai à proposta.
+   - A **saída "Outro"** automática da ferramenta cobre o *"mais 4 de: digite"* — o usuário escreve o tema que quiser e você abre uma rodada focada nisso.
+   - **Qual marcar "(Recomendado)" (= 1ª opção):** se o entendimento ainda está imaturo, recomende o **gap A**; quando já estiver maduro (em geral após 2–3 rodadas), recomende **"Já pode propor"**.
+   - Nunca enfie a ponte como 5ª opção do bloco anterior. Os gaps devem ser **reais e específicos desta conversa** — nada de rótulos genéricos como "mais detalhes".
+   - Qualquer direção de "mais 4" (A, B ou digitada) → volte ao passo 2 com **4 perguntas novas focadas nesse tema** (nunca repita as já respondidas). "Já pode propor" → vá ao passo 5.
 
 5. **Proposta.** Só agora apresente o desenho fechado: **2–3 abordagens com trade-offs e a sua recomendação liderando**, ou um plano direto se já estiver claro. Responda dúvidas pontuais e, se o usuário pedir, parta para a execução.
 
@@ -45,4 +50,5 @@ Não responda nem proponha de cara. Primeiro **entenda** — através de rodadas
 - Pôr "(Recomendado)" **e** "Não sei, recomende" na mesma pergunta. → Redundante; escolha um.
 - Estourar o teto de 4 opções da ferramenta. → Máx. 3 de conteúdo + 1 saída.
 - Embutir a pergunta-ponte no bloco das 4. → É uma **chamada separada**.
+- Oferecer ponte genérica ("mais 4 perguntas"). → **Nomeie os 2 gaps** percebidos como direções concretas; o "Outro" cobre o tema digitado.
 - Propor cedo demais ou nunca parar. → Só após a ponte liberar; sugira propor quando já entendeu o bastante.
