@@ -14,7 +14,7 @@
       --warn: #ffb454;
       --danger: #ff7b72;
       --good: #7ee0c0;
-      --maxw: 1320px;     /* teto do layout em telas grandes (1440p) */
+      --maxw: 1320px;     /* teto do layout em telas médias/grandes */
       --reading: 72ch;    /* largura confortável de leitura do texto corrido */
       --toc-w: 210px;     /* largura do sumário lateral no desktop */
     }
@@ -152,6 +152,14 @@
         gap: 2.5rem; align-items: start;
       }
       .toc { display: block; position: sticky; top: 1.5rem; align-self: start; }
+    }
+
+    /* >= 1600px (telas grandes / 1440p+): reduz margens horizontais,
+       aproveita mais real estate. Texto de leitura segue limitado a --reading. */
+    @media (min-width: 1600px) {
+      :root { --maxw: 1760px; --toc-w: 250px; }
+      .wrap { width: min(var(--maxw), 95vw); }
+      .layout { gap: 3rem; }
     }
 
     /* Celular: respiro menor */
