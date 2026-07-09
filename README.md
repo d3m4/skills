@@ -8,6 +8,7 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 |-------|-----------|---------|
 | [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
 | [`discuta-comigo`](skills/discuta-comigo/) | Refina uma ideia, decisão ou problema junto com você em rodadas de 4 perguntas de múltipla escolha, perguntando ao fim de cada rodada se deve continuar perguntando ou já propor — só apresenta a proposta quando você libera. | `/discuta-comigo` |
+| [`notes-tarefas`](skills/notes-tarefas/) | Organiza notas/tarefas enviadas no chat no sistema tarefas/ do repositório de notas — classifica entre task (todo/rotina) ou ideia (pasta temática), pergunta categoria se necessário, e faz commit+push. | enviar nota no chat |
 
 ---
 
