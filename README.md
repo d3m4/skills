@@ -57,6 +57,26 @@ O agente lê o conteúdo, mapeia cada parte (números → cards de stat, passos 
 
 ---
 
+## notes-tarefas
+
+Recebe uma nota, tarefa ou lembrete no chat e a arquiva no repositório `~/notes`: classifica entre **task** (`tarefas/todo.md` ou `tarefas/rotina.md`), **conclusão** (`tarefas/hoje.md`) ou **ideia/nota** (pasta temática), normaliza a sintaxe (`due::` → `📅`, `#prio` → `⭐`), e comita e empurra. Quando a categoria (`#sol`/`#zas`/`#eu`) ou a pasta não estão claras, **pergunta em vez de chutar**.
+
+Assume que `~/notes` existe — em cada máquina, como symlink para o clone real.
+
+- `skills/notes-tarefas/SKILL.md` — o instruction file (formato das linhas, invariantes, workflow).
+
+### Exemplo de uso
+
+```
+pagar fatura due:: 2026-07-12 #prio
+```
+
+```
+italiano: sbloccare = desbloquear
+```
+
+---
+
 ## Instalação
 
 ### Claude Code — global (todos os projetos)
@@ -107,6 +127,8 @@ skills/
     ├── htmlize/
     │   ├── SKILL.md       # instruction file (receita do estilo htmlize)
     │   └── template.html  # esqueleto com CSS pronto + seções placeholder
-    └── discuta-comigo/
-        └── SKILL.md       # instruction file (processo de descoberta em rodadas)
+    ├── discuta-comigo/
+    │   └── SKILL.md       # instruction file (processo de descoberta em rodadas)
+    └── notes-tarefas/
+        └── SKILL.md       # instruction file (organização do repo ~/notes)
 ```
