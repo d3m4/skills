@@ -56,10 +56,33 @@
     main { min-width: 0; }            /* impede grids de estourar a coluna */
     .toc { display: none; }
 
-    /* Texto corrido limitado à largura de leitura (grids ocupam tudo) */
-    main > section > p,
+    /* Texto corrido limitado à largura de leitura (grids ocupam tudo).
+       `.full` é a válvula de escape: nota de rodapé, legenda e qualquer
+       parágrafo que acompanha um elemento largo (tabela, grid) deve usá-la,
+       senão fica uma coluna estreita ao lado de um bloco largo. */
+    main > section > p:not(.full):not(.nota),
     main > section > .callout p,
-    main > p { max-width: var(--reading); }
+    main > p:not(.full):not(.nota) { max-width: var(--reading); }
+
+    /* Listas de itens substantivos acompanham o container, e NÃO a largura de
+       leitura: limitar <ul> deixa um vazio grande à direita em tela larga. */
+    section ul, section ol { max-width: none; padding-left: 1.4rem; }
+    section li { margin-bottom: .55rem; }
+
+    /* Tabela: o wrapper com overflow-x é obrigatório, senão ela estoura a
+       viewport no celular e o body inteiro passa a rolar na horizontal. */
+    .tabela { overflow-x: auto; margin: 1rem 0; }
+    .tabela table { font-size: .88rem; margin: 0; }
+    .tabela th { color: var(--accent-2); font-weight: 600; white-space: nowrap; }
+    .tabela td code { font-size: .82rem; }
+
+    /* Nota de rodapé de tabela/figura */
+    p.nota {
+      max-width: none; font-size: .85rem; color: var(--pico-muted-color);
+      border-left: 2px solid var(--accent); padding: .55rem .9rem;
+      background: var(--pico-card-background-color);
+      border-radius: 0 8px 8px 0; margin: .5rem 0;
+    }
 
     /* Section headers */
     section { margin-bottom: 3rem; scroll-margin-top: 1.5rem; }
@@ -217,6 +240,19 @@
         </div>
       </section>
 
+      <!-- ====== TABELA (wrapper .tabela é obrigatório) ====== -->
+      <section id="tabela">
+        <div class="kicker"><i class="bi bi-table"></i><h2>{{TITULO_SECAO}}</h2></div>
+        <div class="tabela">
+          <table>
+            <thead><tr><th>{{COL}}</th><th>{{COL}}</th></tr></thead>
+            <tbody><tr><td>{{VAL}}</td><td>{{VAL}}</td></tr></tbody>
+          </table>
+        </div>
+        <p class="nota">{{NOTA_DE_RODAPE}} — usa <code>.nota</code>, que escapa da
+        largura de leitura e acompanha a tabela.</p>
+      </section>
+
       <!-- ====== BLOCO DE CÓDIGO ====== -->
       <section id="codigo">
         <div class="kicker"><i class="bi bi-code-slash"></i><h2>{{TITULO_SECAO}}</h2></div>
@@ -265,6 +301,7 @@
         <span class="toc-title">Nesta página</span>
         <a href="#visao-geral">{{TITULO_SECAO}}</a>
         <a href="#destaques">{{TITULO_SECAO}}</a>
+        <a href="#tabela">{{TITULO_SECAO}}</a>
         <a href="#codigo">{{TITULO_SECAO}}</a>
         <a href="#atencao">{{TITULO_SECAO}}</a>
         <a href="#plano">{{TITULO_SECAO}}</a>
