@@ -29,13 +29,12 @@ Transforme o conteúdo em `$ARGUMENTS` (um arquivo markdown/doc, ou texto colado
 
 Mobile-first com largura fluida + media queries. Não trave o conteúdo numa largura fixa pequena:
 
-- **Largura fluida**: o wrapper usa `width: min(1320px, 92vw)` (`.wrap`) por padrão — aproveita quase toda a tela em monitores médios e respira nas bordas em telas menores.
-- **Largura de leitura**: o texto corrido (`<p>`) fica limitado a `--reading: 72ch` (~65–75 caracteres/linha) mesmo quando o layout é largo. Os grids (stats, cards, timeline) ocupam a largura inteira.
-- **A válvula de escape é `.full` (ou `.nota`)**: o limite acima vale para *texto corrido*, não para tudo que é `<p>`. Nota de rodapé, legenda e qualquer parágrafo que **acompanha um elemento largo** (tabela, grid, imagem) precisa de `.full` ou `.nota` — senão vira uma coluna estreita colada num bloco largo, e fica feio.
-- **Listas acompanham o container, não a largura de leitura.** Nunca limite `<ul>`/`<ol>` a `--reading`: uma lista de itens substantivos com 72ch deixa um vazio enorme à direita em monitor largo. O template já trata isso.
+- **Largura fluida**: o wrapper usa `width: min(var(--maxw), 92vw)` (`.wrap`) — respeita o teto em monitor grande e respira nas bordas em tela pequena.
+- **A medida de leitura é a COLUNA, não cada elemento.** `--maxw: 1160px` é dimensionado para que a coluna de texto caia em ~85–95 caracteres depois de descontar o sumário. **Nunca ponha `max-width` num `<p>`, `<ul>` ou `<table>` individual:** texto estreito encaixado entre tabelas e listas largas produz um layout esfarrapado — a página parece quebrada porque as margens não batem. Uma margem só, para tudo.
+- **Em tela grande, alargue com parcimônia.** Acima de 1600px o teto sobe para 1320px, não mais: um wrapper de 1760px joga a linha de texto para ~180 caracteres, que ninguém lê.
 - **Tipografia fluida**: títulos e números grandes usam `clamp()` para escalar entre mínimo e máximo sem saltos.
 - **Grids intrínsecos**: `repeat(auto-fit, minmax(min(100%, 280px), 1fr))` — viram mais colunas em telas largas e empilham no celular, sem media query por grid.
-- **Breakpoints**: `≥1100px` ativa o sumário lateral; `≥1600px` (telas grandes / 1440p+) sobe o teto para `--maxw: 1760px`, usa `95vw` e alarga o sumário (`--toc-w: 250px`) para reduzir as margens horizontais e aproveitar o real estate; `≤560px` reduz paddings. Use `viewport-fit=cover` no `<meta viewport>`.
+- **Breakpoints**: `≥1100px` ativa o sumário lateral; `≥1600px` sobe o teto de 1160px para 1320px e alarga o sumário (`--toc-w: 260px`); `≤560px` reduz paddings. Use `viewport-fit=cover` no `<meta viewport>`.
 
 ## Sumário lateral + barra de progresso (obrigatórios)
 
