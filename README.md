@@ -8,6 +8,7 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 |-------|-----------|---------|
 | [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
 | [`discuta-comigo`](skills/discuta-comigo/) | Refina uma ideia, decisão ou problema junto com você em rodadas de 4 perguntas de múltipla escolha, perguntando ao fim de cada rodada se deve continuar perguntando ou já propor — só apresenta a proposta quando você libera. | `/discuta-comigo` |
+| [`notes-tarefas`](skills/notes-tarefas/) | Organiza notas/tarefas enviadas no chat no sistema tarefas/ do repositório de notas — classifica entre task (todo/rotina) ou ideia (pasta temática), pergunta categoria se necessário, e faz commit+push. | enviar nota no chat |
 
 ---
 
@@ -53,6 +54,26 @@ htmlize esse arquivo: docs/meu-documento.md
 ```
 
 O agente lê o conteúdo, mapeia cada parte (números → cards de stat, passos → timeline, riscos → callouts) e abre o `.html` no navegador.
+
+---
+
+## notes-tarefas
+
+Recebe uma nota, tarefa ou lembrete no chat e a arquiva no repositório `~/notes`: classifica entre **task** (`tarefas/todo.md` ou `tarefas/rotina.md`), **conclusão** (`tarefas/hoje.md`) ou **ideia/nota** (pasta temática), normaliza a sintaxe (`due::` → `📅`, `#prio` → `⭐`), e comita e empurra. Quando a categoria (`#sol`/`#zas`/`#eu`) ou a pasta não estão claras, **pergunta em vez de chutar**.
+
+Assume que `~/notes` existe — em cada máquina, como symlink para o clone real.
+
+- `skills/notes-tarefas/SKILL.md` — o instruction file (formato das linhas, invariantes, workflow).
+
+### Exemplo de uso
+
+```
+pagar fatura due:: 2026-07-12 #prio
+```
+
+```
+italiano: sbloccare = desbloquear
+```
 
 ---
 
@@ -106,6 +127,8 @@ skills/
     ├── htmlize/
     │   ├── SKILL.md       # instruction file (receita do estilo htmlize)
     │   └── template.html  # esqueleto com CSS pronto + seções placeholder
-    └── discuta-comigo/
-        └── SKILL.md       # instruction file (processo de descoberta em rodadas)
+    ├── discuta-comigo/
+    │   └── SKILL.md       # instruction file (processo de descoberta em rodadas)
+    └── notes-tarefas/
+        └── SKILL.md       # instruction file (organização do repo ~/notes)
 ```
