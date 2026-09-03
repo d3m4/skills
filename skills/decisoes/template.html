@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Decisões pendentes</title>
+<style>
+  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#e2e2dd; --acc:#2f6f4f; --acc-bg:#e8f2ec; --warn:#8a4b00; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { padding:24px 32px 8px; }
+  h1 { margin:0 0 4px; font-size:22px; }
+  .sub { color:var(--muted); font-size:13px; }
+  main { max-width:960px; margin:0 auto; padding:8px 32px 120px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin:18px 0; }
+  .card h2 { margin:0 0 2px; font-size:17px; }
+  .meta { color:var(--muted); font-size:12px; margin-bottom:10px; }
+  .meta code { background:#f0f0ec; padding:1px 5px; border-radius:4px; }
+  .ctx { margin:0 0 12px; white-space:pre-wrap; }
+  .impede { font-size:13px; color:var(--warn); margin-bottom:10px; }
+  .opt { display:grid; grid-template-columns:22px 1fr; gap:8px; padding:8px 10px; border:1px solid var(--line); border-radius:8px; margin:6px 0; cursor:pointer; }
+  .opt:has(input:checked) { border-color:var(--acc); background:var(--acc-bg); }
+  .opt input { margin-top:4px; }
+  .opt .t { font-weight:600; }
+  .opt .p { color:var(--muted); font-size:13px; }
+  .rec { margin:10px 0 6px; padding:8px 10px; background:var(--acc-bg); border-left:3px solid var(--acc); border-radius:4px; font-size:14px; white-space:pre-wrap; }
+  textarea { width:100%; min-height:56px; margin-top:8px; padding:8px; border:1px solid var(--line); border-radius:8px; font:inherit; resize:vertical; }
+  .bar { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); padding:12px 32px; display:flex; gap:12px; align-items:center; }
+  button { font:inherit; padding:10px 18px; border-radius:8px; border:1px solid var(--acc); background:var(--acc); color:#fff; cursor:pointer; }
+  button.sec { background:#fff; color:var(--acc); }
+  #status { color:var(--muted); font-size:13px; }
+  #saida { display:none; width:100%; min-height:160px; margin-top:12px; font-family:ui-monospace, Consolas, monospace; font-size:13px; }
+  .empty { color:var(--muted); padding:40px 0; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Decisões pendentes</h1>
+  <div class="sub" id="sub"></div>
+</header>
+<main id="main"></main>
+<div class="bar">
+  <button id="copiar">Copiar respostas</button>
+  <button class="sec" id="mostrar">Mostrar texto</button>
+  <span id="status"></span>
+</div>
+<textarea id="saida" readonly></textarea>
+<script>
+const DADOS = /*DADOS*/[]/*FIM*/;
+const CABECALHO = "respostas as questoes do jsonl pendentes";
+const main = document.getElementById("main");
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+document.getElementById("sub").textContent =
+  DADOS.length === 0 ? "nenhuma decisão aberta" :
+  `${DADOS.length} decisão(ões) aberta(s) — a opção recomendada já vem marcada; troque se discordar, complete se quiser, e copie no fim.`;
+
+if (DADOS.length === 0) main.innerHTML = '<div class="empty">Nada a decidir.</div>';
+
+for (const d of DADOS) {
+  const card = document.createElement("section");
+  card.className = "card";
+  card.dataset.id = d.id;
+  const marcada = d.resposta || d.recomendacao;
+  const opcoes = (d.opcoes || []).map((o) => `
+    <label class="opt"><input type="radio" name="${esc(d.id)}" value="${esc(o.id)}" ${o.id === marcada ? "checked" : ""}>
+      <span><span class="t">${esc(o.id)}) ${esc(o.texto)}</span>${o.preco ? `<div class="p">${esc(o.preco)}</div>` : ""}</span></label>`).join("");
+  card.innerHTML = `
+    <h2>${esc(d.id)} — ${esc(d.titulo)}${d.status === "decidida" ? ' <span class="p">(decidida)</span>' : ""}</h2>
+    <div class="meta">${[
+      d.gate && d.gate !== "-" ? `gate <code>${esc(d.gate)}</code>` : "",
+      d.area && d.area !== "-" ? `área <code>${esc(d.area)}</code>` : "",
+      d.criada ? `criada ${esc(d.criada)}` : "",
+      d.fonte ? `fonte <code>${esc(d.fonte)}</code>` : "",
+    ].filter(Boolean).join(" · ")}</div>
+    <p class="ctx">${esc(d.contexto)}</p>
+    ${d.impede && d.impede.length ? `<div class="impede">impede: ${esc(d.impede.join(", "))}</div>` : ""}
+    ${opcoes}
+    <label class="opt"><input type="radio" name="${esc(d.id)}" value="outra"><span><span class="t">outra</span><div class="p">descreva no complemento</div></span></label>
+    <div class="rec"><b>Recomendação: ${esc(d.recomendacao)}.</b> ${esc(d.porque)}</div>
+    <textarea placeholder="Complemento (opcional): condição, ajuste, motivo..."></textarea>`;
+  main.appendChild(card);
+}
+
+function montar() {
+  const linhas = [CABECALHO];
+  for (const card of main.querySelectorAll(".card")) {
+    const id = card.dataset.id;
+    const sel = card.querySelector("input:checked");
+    const comp = card.querySelector("textarea").value.trim().replace(/\s*\n\s*/g, " / ");
+    linhas.push(`${id}: ${sel ? sel.value : "(sem resposta)"}${comp ? " — " + comp : ""}`);
+  }
+  return linhas.join("\n");
+}
+document.getElementById("mostrar").onclick = () => {
+  const s = document.getElementById("saida");
+  s.value = montar(); s.style.display = "block"; s.scrollIntoView({ behavior: "smooth" });
+};
+document.getElementById("copiar").onclick = async () => {
+  const txt = montar();
+  const st = document.getElementById("status");
+  try { await navigator.clipboard.writeText(txt); st.textContent = "copiado — cole no terminal"; }
+  catch { const s = document.getElementById("saida"); s.value = txt; s.style.display = "block"; s.select(); st.textContent = "clipboard indisponível: selecione o texto abaixo"; }
+};
+</script>
+</body>
+</html>

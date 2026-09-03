@@ -9,6 +9,7 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 | [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
 | [`discuta-comigo`](skills/discuta-comigo/) | Refina uma ideia, decisão ou problema junto com você em rodadas de 4 perguntas de múltipla escolha, perguntando ao fim de cada rodada se deve continuar perguntando ou já propor — só apresenta a proposta quando você libera. | `/discuta-comigo` |
 | [`notes-tarefas`](skills/notes-tarefas/) | Organiza notas/tarefas enviadas no chat no sistema tarefas/ do repositório de notas — classifica entre task (todo/rotina) ou ideia (pasta temática), pergunta categoria se necessário, e faz commit+push. | enviar nota no chat |
+| [`decisoes`](skills/decisoes/) | Registra em `decisoes.jsonl` cada decisão que só o dono toma (contexto, 3 opções, recomendação) sem interromper o trabalho; no fechamento do gate gera uma página HTML com todas as pendentes, com botão que copia as respostas para colar de volta no chat. Aceita também um bloco `.md` solto. | `/decisoes` |
 
 ---
 
@@ -77,6 +78,27 @@ italiano: sbloccare = desbloquear
 
 ---
 
+## decisoes
+
+Decisão que só o dono toma **não interrompe o trabalho**: vira uma linha em `docs/decisoes.jsonl` (id, gate, contexto que baste sozinho, **três opções com preço**, recomendação e porquê, o que ela impede) e o agente segue com tudo que não depende dela. Quando o gate fecha, `gera_html.py` monta **uma página** com todas as pendentes — a opção recomendada já marcada, campo de complemento, e um botão **Copiar respostas** que produz o texto `respostas as questoes do jsonl pendentes` seguido de `id: opção — complemento`. Você cola no chat, `responde.py` grava no JSONL (abortando inteiro em id desconhecido, decisão já decidida ou opção inexistente) e o agente executa o que destravou. Cinquenta decisões viram um único colar.
+
+O gerador não depende do registro: um bloco `.md` solto (formato no cabeçalho do script) ou um `.json` também viram página.
+
+- `skills/decisoes/SKILL.md` — o instruction file (quando registrar, o ciclo, o esquema do registro).
+- `skills/decisoes/gera_html.py` — monta a página a partir de `.md`, `.json` ou `.jsonl` (`--gate`, `--todas`, `--abrir`).
+- `skills/decisoes/responde.py` — aplica o texto colado ao JSONL.
+- `skills/decisoes/template.html` — a página (sem dependência externa).
+
+### Exemplo de uso
+
+```
+py ~/.claude/skills/decisoes/gera_html.py docs/decisoes.jsonl docs/decisoes/pendentes-2026-09-03.html --abrir
+```
+
+Depois de responder no browser e colar o texto no chat, o agente roda `responde.py` e segue.
+
+---
+
 ## Instalação
 
 ### Claude Code — global (todos os projetos)
@@ -129,6 +151,11 @@ skills/
     │   └── template.html  # esqueleto com CSS pronto + seções placeholder
     ├── discuta-comigo/
     │   └── SKILL.md       # instruction file (processo de descoberta em rodadas)
-    └── notes-tarefas/
-        └── SKILL.md       # instruction file (organização do repo ~/notes)
+    ├── notes-tarefas/
+    │   └── SKILL.md       # instruction file (organização do repo ~/notes)
+    └── decisoes/
+        ├── SKILL.md       # instruction file (registro de decisões e o ciclo do gate)
+        ├── gera_html.py   # monta a página a partir de .md/.json/.jsonl
+        ├── responde.py    # aplica as respostas coladas ao JSONL
+        └── template.html  # a página com o botão "Copiar respostas"
 ```
