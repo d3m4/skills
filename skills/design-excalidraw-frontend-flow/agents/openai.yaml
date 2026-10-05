@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fluxo Excalidraw para Frontend"
+  short_description: "Converte runbooks em fluxos e telas editáveis"
+  default_prompt: "Use $design-excalidraw-frontend-flow para analisar este runbook e criar um Excalidraw com fluxo, páginas, listagens e gaps."

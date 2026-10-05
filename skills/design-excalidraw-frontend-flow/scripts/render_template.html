@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #ffffff; }
+    #root { display: inline-block; }
+    #root svg { display: block; }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module">
+    // Versão fixada para o render não mudar de um dia para o outro. Não usar ?bundle:
+    // no 0.18.1 ele quebra (404 em @braintree/sanitize-url).
+    import { exportToSvg, getCommonBounds } from "https://esm.sh/@excalidraw/excalidraw@0.18.1";
+
+    window.renderDiagram = async function (data) {
+      try {
+        const svg = await exportToSvg({
+          elements: data.elements || [],
+          appState: {
+            ...(data.appState || {}),
+            viewBackgroundColor: (data.appState || {}).viewBackgroundColor || "#ffffff",
+            exportBackground: true,
+            exportWithDarkMode: false,
+          },
+          files: data.files || {},
+          exportPadding: 40,
+        });
+        const root = document.getElementById("root");
+        root.innerHTML = "";
+        root.appendChild(svg);
+        await document.fonts.ready;
+        // limites da cena segundo o próprio Excalidraw, para o recorte bater com as coordenadas
+        const live = (data.elements || []).filter(e => !e.isDeleted);
+        const [minX, minY, maxX, maxY] = getCommonBounds(live);
+        return { success: true, width: +svg.getAttribute("width"), height: +svg.getAttribute("height"),
+                 bounds: [minX, minY, maxX, maxY] };
+      } catch (err) {
+        return { success: false, error: String(err && err.stack || err) };
+      }
+    };
+    window.__moduleReady = true;
+  </script>
+</body>
+</html>

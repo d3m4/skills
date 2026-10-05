@@ -7,6 +7,7 @@ Skills portáteis para agentes de IA (Claude Code, Codex e similares). Cada skil
 | Skill | O que faz | Trigger |
 |-------|-----------|---------|
 | [`htmlize`](skills/htmlize/) | Transforma um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, com sumário lateral e barra de progresso, e abre no navegador. | `/htmlize` |
+| [`design-excalidraw-frontend-flow`](skills/design-excalidraw-frontend-flow/) | Transforma runbooks e contratos de API em um Excalidraw com fluxo centrado no usuário, páginas sem modal, listagens e análise de gaps. | `/design-excalidraw-frontend-flow` (Claude), `$design-excalidraw-frontend-flow` (Codex) ou pedido de diagrama funcional para frontend |
 | [`discuta-comigo`](skills/discuta-comigo/) | Refina uma ideia, decisão ou problema junto com você em rodadas de 4 perguntas de múltipla escolha, perguntando ao fim de cada rodada se deve continuar perguntando ou já propor — só apresenta a proposta quando você libera. | `/discuta-comigo` |
 | [`notes-tarefas`](skills/notes-tarefas/) | Organiza notas/tarefas enviadas no chat no sistema tarefas/ do repositório de notas — classifica entre task (todo/rotina) ou ideia (pasta temática), pergunta categoria se necessário, e faz commit+push. | enviar nota no chat |
 | [`decisoes`](skills/decisoes/) | Registra em `decisoes.jsonl` cada decisão que só o dono toma (contexto, 3 opções, recomendação) sem interromper o trabalho; no fechamento do gate gera uma página HTML com todas as pendentes, com botão que copia as respostas para colar de volta no chat. Aceita também um bloco `.md` solto. | `/decisoes` |
@@ -74,6 +75,28 @@ pagar fatura due:: 2026-07-12 #prio
 
 ```
 italiano: sbloccare = desbloquear
+```
+
+---
+
+## design-excalidraw-frontend-flow
+
+Transforma runbook + contratos reais da API (DTO, OpenAPI, código) num `.excalidraw` **editável à mão**: fluxo centrado no que o usuário vê (sólido = usuário, tracejado = interno, losango = decisão), páginas completas sem modal com os campos reais, listagens com estados (vazio, falha, 401, 403) e uma área de gaps onde toda divergência entre as fontes fica registrada em vez de resolvida em silêncio. Setas saem ligadas às figuras e rótulos vinculados, então arrastar um nó leva junto setas e texto.
+
+O desenho passa por um loop obrigatório de **validar → renderizar → olhar → corrigir**:
+
+- `scripts/validate_excalidraw.py` — erros de vínculo (seta solta, `boundElements` de mão única, id inexistente) e avisos de layout (texto que não cabe, sobreposição, seta atravessando nó, rótulo solto). `--fix` conserta as referências de volta.
+- `scripts/render_excalidraw.py` — PNG via Playwright usando o Edge/Chrome instalado; `--crop` e `--tiles` para ler canvas grande em pedaços.
+- `scripts/bind_loose.py` — converte canvas legado (setas e textos soltos) em canvas ligado sem mover figuras.
+- `references/` — orientação funcional, paleta (única fonte de cores) e templates JSON de cada elemento.
+- `assets/frontend-runbook-example.excalidraw` — canvas de referência, limpo no validador.
+
+Requisito do render: `python -m pip install --user playwright` (e internet: o Excalidraw vem do esm.sh).
+
+### Exemplo de uso
+
+```
+Analise o runbook docs/runbook-rotas.md e os contratos da API e crie o Excalidraw do frontend
 ```
 
 ---
@@ -149,6 +172,12 @@ skills/
     ├── htmlize/
     │   ├── SKILL.md       # instruction file (receita do estilo htmlize)
     │   └── template.html  # esqueleto com CSS pronto + seções placeholder
+    ├── design-excalidraw-frontend-flow/
+    │   ├── SKILL.md       # workflow de análise, desenho e loop validar/renderizar
+    │   ├── references/    # orientação funcional, paleta e templates de elementos
+    │   ├── scripts/       # validate, render (PNG) e bind_loose (converte canvas legado)
+    │   ├── assets/        # canvas Excalidraw de referência
+    │   └── agents/        # metadados para o Codex
     ├── discuta-comigo/
     │   └── SKILL.md       # instruction file (processo de descoberta em rodadas)
     ├── notes-tarefas/
