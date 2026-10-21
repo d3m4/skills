@@ -26,9 +26,9 @@
   .card h2 { margin:0 0 4px; font-size:20px; }
   .meta { color:var(--muted); font-size:12px; margin-bottom:12px; }
   .meta code { background:#f0f0ec; padding:1px 5px; border-radius:4px; }
-  .ctx { margin:0 0 14px; white-space:pre-wrap; column-count:2; column-gap:40px; column-rule:1px solid var(--line); }
+  .ctx { margin:0 0 14px; white-space:pre-wrap; max-width:110ch; }
   .impede { font-size:13px; color:var(--warn); margin:0 0 14px; padding:8px 12px; background:#fdf6ec; border-radius:6px; }
-  .opts { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .opts { display:grid; grid-template-columns:1fr; gap:10px; }
   .opt { display:grid; grid-template-columns:22px 1fr; gap:8px; padding:12px 14px; border:1px solid var(--line); border-radius:8px; cursor:pointer; background:#fff; }
   .opt:hover { border-color:#bbb; }
   .opt:has(input:checked) { border-color:var(--acc); background:var(--acc-bg); box-shadow:0 0 0 1px var(--acc) inset; }
@@ -51,7 +51,7 @@
   #saida { display:none; width:100%; min-height:160px; margin-top:16px; font-family:ui-monospace, Consolas, monospace; font-size:13px; }
   .empty { color:var(--muted); padding:40px 0; text-align:center; }
   .hint { color:var(--muted); font-size:12px; }
-  @media (max-width: 900px) { body { grid-template-columns:1fr; } nav { display:none; } .ctx { column-count:1; } .opts { grid-template-columns:1fr; } }
+  @media (max-width: 900px) { body { grid-template-columns:1fr; } nav { display:none; } }
 </style>
 </head>
 <body>
