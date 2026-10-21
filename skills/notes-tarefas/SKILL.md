@@ -1,6 +1,6 @@
 ---
 name: notes-tarefas
-description: Use quando o usuário envia uma nota/tarefa no Telegram ou terminal e você precisa organizá-la no sistema de tarefas do repositório ~/notes — decidindo se é task (todo.md/rotina.md) ou ideia/nota (pasta temática), perguntando a categoria se não souber. Também cobre marcar tarefa como concluída. Trigger: enviar nota, tarefa, lembrete ou anotação no chat.
+description: "Use quando o usuário envia uma nota/tarefa no Telegram ou terminal e você precisa organizá-la no sistema de tarefas do repositório ~/notes — decidindo se é task (todo.md/rotina.md) ou ideia/nota (pasta temática), perguntando a categoria se não souber. Também cobre marcar tarefa como concluída. Trigger: enviar nota, tarefa, lembrete ou anotação no chat."
 ---
 
 # notes-tarefas — organizar notas e tarefas no repositório

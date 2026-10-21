@@ -1,6 +1,6 @@
 ---
 name: discuta-comigo
-description: Use quando o usuário quer pensar junto / refinar uma ideia, decisão ou problema através de perguntas antes de receber uma proposta — em vez de uma resposta imediata. O usuário passa a pergunta ou tema inicial. Trigger: /discuta-comigo
+description: "Use quando o usuário quer pensar junto / refinar uma ideia, decisão ou problema através de perguntas antes de receber uma proposta — em vez de uma resposta imediata. O usuário passa a pergunta ou tema inicial. Trigger: /discuta-comigo"
 ---
 
 Conduza uma conversa estruturada de descoberta a partir de `$ARGUMENTS` (a pergunta ou tema inicial). O objetivo é **refinar a ideia junto com o usuário ANTES de propor qualquer coisa**, em rodadas de 4 perguntas de múltipla escolha.

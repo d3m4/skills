@@ -1,6 +1,6 @@
 ---
 name: htmlize
-description: Use quando o usuário quer transformar um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, self-contained, com sumário lateral e barra de progresso, e abrir no navegador automaticamente. Trigger: /htmlize
+description: "Use quando o usuário quer transformar um markdown/doc/conteúdo num infográfico HTML clean e responsivo (PicoCSS + Bootstrap Icons), tema escuro, self-contained, com sumário lateral e barra de progresso, e abrir no navegador automaticamente. Trigger: /htmlize"
 ---
 
 Transforme o conteúdo em `$ARGUMENTS` (um arquivo markdown/doc, ou texto colado) num **infográfico HTML self-contained e responsivo** e abra no navegador automaticamente.
