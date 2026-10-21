@@ -1,6 +1,6 @@
 ---
 name: decisoes
-description: Use when a task raises a question only the owner can answer (design choice, scope, policy, value) and the work should continue instead of stopping to ask; when a gate closes with pending decisions; or when the owner hands over a block of decisions in Markdown or JSONL and wants a single page to answer them all at once. Trigger: /decisoes
+description: "Use when a task raises a question only the owner can answer (design choice, scope, policy, value) and the work should continue instead of stopping to ask; when a gate closes with pending decisions; or when the owner hands over a block of decisions in Markdown or JSONL and wants a single page to answer them all at once. Trigger: /decisoes"
 ---
 
 # Decisões em lote
@@ -34,6 +34,12 @@ respondem: isso se resolve lendo, não perguntando.
    ```
    Saída versionada ao lado do registro: `docs/decisoes/pendentes-AAAA-MM-DD.html`.
    Código de saída 3 = nada aberto, não gerar nem anunciar página.
+   A página mostra **uma decisão por vez**, em tela cheia: sidebar à esquerda
+   agrupada por `area` (status ● pendente / ✓ confirmada), decisão corrente à
+   direita com contexto em duas colunas e opções em grade; ← → ou "próxima"
+   confirmam e avançam; o progresso fica em `localStorage` do browser. Por isso
+   `area` importa: é a categoria da sidebar — use valores curtos e repetidos
+   (`razao`, `concorrencia`, `bi`, `operacao`...), não um por decisão.
 3. **Receber as respostas.** O dono cola o texto do botão "Copiar respostas".
    Gravar num arquivo temporário e aplicar:
    ```bash

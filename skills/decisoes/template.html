@@ -5,32 +5,53 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Decisões pendentes</title>
 <style>
-  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#e2e2dd; --acc:#2f6f4f; --acc-bg:#e8f2ec; --warn:#8a4b00; }
+  :root { --bg:#f7f7f5; --card:#fff; --ink:#1d1d1b; --muted:#6b6b66; --line:#e2e2dd; --acc:#2f6f4f; --acc-bg:#e8f2ec; --warn:#8a4b00; --side:#f0f0ec; --ok:#2f6f4f; --pend:#c77d00; }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  header { padding:24px 32px 8px; }
-  h1 { margin:0 0 4px; font-size:22px; }
+  html, body { height:100%; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; display:grid; grid-template-rows:auto 1fr auto; grid-template-columns:280px 1fr; height:100vh; overflow:hidden; }
+  header { grid-column:1 / -1; padding:14px 24px 10px; border-bottom:1px solid var(--line); background:#fff; display:flex; align-items:baseline; gap:16px; }
+  h1 { margin:0; font-size:19px; }
   .sub { color:var(--muted); font-size:13px; }
-  main { max-width:960px; margin:0 auto; padding:8px 32px 120px; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:20px 22px; margin:18px 0; }
-  .card h2 { margin:0 0 2px; font-size:17px; }
-  .meta { color:var(--muted); font-size:12px; margin-bottom:10px; }
+  nav { background:var(--side); border-right:1px solid var(--line); overflow-y:auto; padding:10px 0 20px; }
+  nav .grp { padding:12px 16px 4px; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  nav .it { display:grid; grid-template-columns:16px 52px 1fr; gap:8px; align-items:baseline; padding:6px 16px; cursor:pointer; font-size:13px; border-left:3px solid transparent; }
+  nav .it:hover { background:#e6e6e0; }
+  nav .it.cur { background:#fff; border-left-color:var(--acc); font-weight:600; }
+  nav .it .st { font-size:12px; color:var(--pend); }
+  nav .it.ok .st { color:var(--ok); }
+  nav .it .id { color:var(--muted); font-family:ui-monospace, Consolas, monospace; font-size:12px; }
+  nav .it .tt { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  main { overflow-y:auto; padding:20px 32px 32px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:22px 28px; }
+  .card h2 { margin:0 0 4px; font-size:20px; }
+  .meta { color:var(--muted); font-size:12px; margin-bottom:12px; }
   .meta code { background:#f0f0ec; padding:1px 5px; border-radius:4px; }
-  .ctx { margin:0 0 12px; white-space:pre-wrap; }
-  .impede { font-size:13px; color:var(--warn); margin-bottom:10px; }
-  .opt { display:grid; grid-template-columns:22px 1fr; gap:8px; padding:8px 10px; border:1px solid var(--line); border-radius:8px; margin:6px 0; cursor:pointer; }
-  .opt:has(input:checked) { border-color:var(--acc); background:var(--acc-bg); }
+  .ctx { margin:0 0 14px; white-space:pre-wrap; column-count:2; column-gap:40px; column-rule:1px solid var(--line); }
+  .impede { font-size:13px; color:var(--warn); margin:0 0 14px; padding:8px 12px; background:#fdf6ec; border-radius:6px; }
+  .opts { display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .opt { display:grid; grid-template-columns:22px 1fr; gap:8px; padding:12px 14px; border:1px solid var(--line); border-radius:8px; cursor:pointer; background:#fff; }
+  .opt:hover { border-color:#bbb; }
+  .opt:has(input:checked) { border-color:var(--acc); background:var(--acc-bg); box-shadow:0 0 0 1px var(--acc) inset; }
   .opt input { margin-top:4px; }
   .opt .t { font-weight:600; }
-  .opt .p { color:var(--muted); font-size:13px; }
-  .rec { margin:10px 0 6px; padding:8px 10px; background:var(--acc-bg); border-left:3px solid var(--acc); border-radius:4px; font-size:14px; white-space:pre-wrap; }
-  textarea { width:100%; min-height:56px; margin-top:8px; padding:8px; border:1px solid var(--line); border-radius:8px; font:inherit; resize:vertical; }
-  .bar { position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); padding:12px 32px; display:flex; gap:12px; align-items:center; }
-  button { font:inherit; padding:10px 18px; border-radius:8px; border:1px solid var(--acc); background:var(--acc); color:#fff; cursor:pointer; }
+  .opt .t .star { color:var(--acc); margin-left:6px; font-size:12px; font-weight:700; }
+  .opt .p { color:var(--muted); font-size:13px; margin-top:4px; }
+  .opt.outra { grid-column:1 / -1; }
+  .rec { margin:14px 0 6px; padding:10px 12px; background:var(--acc-bg); border-left:3px solid var(--acc); border-radius:4px; font-size:14px; white-space:pre-wrap; }
+  textarea { width:100%; min-height:64px; margin-top:8px; padding:8px; border:1px solid var(--line); border-radius:8px; font:inherit; resize:vertical; }
+  .bar { grid-column:1 / -1; background:#fff; border-top:1px solid var(--line); padding:10px 24px; display:flex; gap:12px; align-items:center; }
+  .bar .dots { display:flex; gap:5px; flex-wrap:wrap; flex:1; justify-content:center; }
+  .bar .dot { width:11px; height:11px; border-radius:50%; border:1.5px solid var(--pend); cursor:pointer; }
+  .bar .dot.ok { background:var(--ok); border-color:var(--ok); }
+  .bar .dot.cur { box-shadow:0 0 0 2px #fff, 0 0 0 3.5px var(--acc); }
+  button { font:inherit; padding:9px 16px; border-radius:8px; border:1px solid var(--acc); background:var(--acc); color:#fff; cursor:pointer; }
   button.sec { background:#fff; color:var(--acc); }
-  #status { color:var(--muted); font-size:13px; }
-  #saida { display:none; width:100%; min-height:160px; margin-top:12px; font-family:ui-monospace, Consolas, monospace; font-size:13px; }
+  button:disabled { opacity:.4; cursor:default; }
+  #status { color:var(--muted); font-size:13px; min-width:200px; text-align:right; }
+  #saida { display:none; width:100%; min-height:160px; margin-top:16px; font-family:ui-monospace, Consolas, monospace; font-size:13px; }
   .empty { color:var(--muted); padding:40px 0; text-align:center; }
+  .hint { color:var(--muted); font-size:12px; }
+  @media (max-width: 900px) { body { grid-template-columns:1fr; } nav { display:none; } .ctx { column-count:1; } .opts { grid-template-columns:1fr; } }
 </style>
 </head>
 <body>
@@ -38,35 +59,70 @@
   <h1>Decisões pendentes</h1>
   <div class="sub" id="sub"></div>
 </header>
+<nav id="nav"></nav>
 <main id="main"></main>
 <div class="bar">
+  <button class="sec" id="ant">◀ anterior</button>
+  <div class="dots" id="dots"></div>
+  <button class="sec" id="prox">próxima ▶</button>
   <button id="copiar">Copiar respostas</button>
   <button class="sec" id="mostrar">Mostrar texto</button>
   <span id="status"></span>
 </div>
-<textarea id="saida" readonly></textarea>
 <script>
 const DADOS = /*DADOS*/[]/*FIM*/;
 const CABECALHO = "respostas as questoes do jsonl pendentes";
 const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const dots = document.getElementById("dots");
 const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const CHAVE = "decisoes:" + DADOS.map((d) => d.id).join(",");
+
+// ordem de navegação = agrupada por área, na ordem em que cada área aparece
+const grupos = [];
+for (const d of DADOS) {
+  const area = d.area && d.area !== "-" ? d.area : "geral";
+  let g = grupos.find((x) => x.area === area);
+  if (!g) { g = { area, itens: [] }; grupos.push(g); }
+  g.itens.push(d);
+}
+const ORDEM = grupos.flatMap((g) => g.itens);
+const estado = {};   // id -> {resposta, complemento, ok}
+let cur = 0;
+
+try {
+  const salvo = JSON.parse(localStorage.getItem(CHAVE) || "{}");
+  for (const d of ORDEM) if (salvo[d.id]) estado[d.id] = salvo[d.id];
+} catch {}
+for (const d of ORDEM) {
+  estado[d.id] = estado[d.id] || { resposta: d.resposta || d.recomendacao, complemento: "", ok: d.status === "decidida" };
+}
+function salvar() { try { localStorage.setItem(CHAVE, JSON.stringify(estado)); } catch {} }
 
 document.getElementById("sub").textContent =
   DADOS.length === 0 ? "nenhuma decisão aberta" :
-  `${DADOS.length} decisão(ões) aberta(s) — a opção recomendada já vem marcada; troque se discordar, complete se quiser, e copie no fim.`;
+  `${DADOS.length} decisão(ões) em ${grupos.length} categoria(s) — a recomendada já vem marcada; clique numa opção (ou em "próxima") para confirmar. ← → navegam.`;
 
-if (DADOS.length === 0) main.innerHTML = '<div class="empty">Nada a decidir.</div>';
+function pintarNav() {
+  nav.innerHTML = grupos.map((g) => `<div class="grp">${esc(g.area)}</div>` + g.itens.map((d) => {
+    const i = ORDEM.indexOf(d), e = estado[d.id];
+    return `<div class="it ${i === cur ? "cur" : ""} ${e.ok ? "ok" : ""}" data-i="${i}"><span class="st">${e.ok ? "✓" : "●"}</span><span class="id">${esc(d.id.replace(/^dec-/, ""))}</span><span class="tt" title="${esc(d.titulo)}">${esc(d.titulo)}</span></div>`;
+  }).join("")).join("");
+  dots.innerHTML = ORDEM.map((d, i) => `<span class="dot ${estado[d.id].ok ? "ok" : ""} ${i === cur ? "cur" : ""}" data-i="${i}" title="${esc(d.id)}"></span>`).join("");
+  const feitas = ORDEM.filter((d) => estado[d.id].ok).length;
+  document.getElementById("status").textContent = `${feitas} de ${ORDEM.length} confirmada(s)`;
+  document.getElementById("ant").disabled = cur === 0;
+  document.getElementById("prox").disabled = cur >= ORDEM.length - 1;
+}
 
-for (const d of DADOS) {
-  const card = document.createElement("section");
-  card.className = "card";
-  card.dataset.id = d.id;
-  const marcada = d.resposta || d.recomendacao;
+function pintar() {
+  if (ORDEM.length === 0) { main.innerHTML = '<div class="empty">Nada a decidir.</div>'; return; }
+  const d = ORDEM[cur], e = estado[d.id];
   const opcoes = (d.opcoes || []).map((o) => `
-    <label class="opt"><input type="radio" name="${esc(d.id)}" value="${esc(o.id)}" ${o.id === marcada ? "checked" : ""}>
-      <span><span class="t">${esc(o.id)}) ${esc(o.texto)}</span>${o.preco ? `<div class="p">${esc(o.preco)}</div>` : ""}</span></label>`).join("");
-  card.innerHTML = `
-    <h2>${esc(d.id)} — ${esc(d.titulo)}${d.status === "decidida" ? ' <span class="p">(decidida)</span>' : ""}</h2>
+    <label class="opt"><input type="radio" name="${esc(d.id)}" value="${esc(o.id)}" ${o.id === e.resposta ? "checked" : ""}>
+      <span><span class="t">${esc(o.id)}) ${esc(o.texto)}${o.id === d.recomendacao ? '<span class="star">★ recomendada</span>' : ""}</span>${o.preco ? `<div class="p">${esc(o.preco)}</div>` : ""}</span></label>`).join("");
+  main.innerHTML = `<section class="card" data-id="${esc(d.id)}">
+    <h2>${esc(d.id)} — ${esc(d.titulo)}${d.status === "decidida" ? ' <span class="hint">(decidida)</span>' : ""} <span class="hint">[${cur + 1}/${ORDEM.length}]</span></h2>
     <div class="meta">${[
       d.gate && d.gate !== "-" ? `gate <code>${esc(d.gate)}</code>` : "",
       d.area && d.area !== "-" ? `área <code>${esc(d.area)}</code>` : "",
@@ -75,33 +131,53 @@ for (const d of DADOS) {
     ].filter(Boolean).join(" · ")}</div>
     <p class="ctx">${esc(d.contexto)}</p>
     ${d.impede && d.impede.length ? `<div class="impede">impede: ${esc(d.impede.join(", "))}</div>` : ""}
-    ${opcoes}
-    <label class="opt"><input type="radio" name="${esc(d.id)}" value="outra"><span><span class="t">outra</span><div class="p">descreva no complemento</div></span></label>
+    <div class="opts">${opcoes}
+      <label class="opt outra"><input type="radio" name="${esc(d.id)}" value="outra" ${e.resposta === "outra" ? "checked" : ""}><span><span class="t">outra</span><div class="p">descreva no complemento</div></span></label>
+    </div>
     <div class="rec"><b>Recomendação: ${esc(d.recomendacao)}.</b> ${esc(d.porque)}</div>
-    <textarea placeholder="Complemento (opcional): condição, ajuste, motivo..."></textarea>`;
-  main.appendChild(card);
+    <textarea placeholder="Complemento (opcional): condição, ajuste, motivo...">${esc(e.complemento)}</textarea>
+  </section>`;
+  main.scrollTop = 0;
+  main.querySelectorAll("input[type=radio]").forEach((r) => r.onchange = () => { e.resposta = r.value; e.ok = true; salvar(); pintarNav(); });
+  main.querySelector("textarea").oninput = (ev) => { e.complemento = ev.target.value; salvar(); };
+  pintarNav();
 }
+
+function ir(i) { if (i < 0 || i >= ORDEM.length) return; cur = i; pintar(); }
+function confirmarAtual() { const d = ORDEM[cur]; if (d) { estado[d.id].ok = true; salvar(); } }
+document.getElementById("ant").onclick = () => ir(cur - 1);
+document.getElementById("prox").onclick = () => { confirmarAtual(); ir(cur + 1); };
+nav.onclick = (ev) => { const it = ev.target.closest(".it"); if (it) ir(+it.dataset.i); };
+dots.onclick = (ev) => { const dt = ev.target.closest(".dot"); if (dt) ir(+dt.dataset.i); };
+document.addEventListener("keydown", (ev) => {
+  if (ev.target.tagName === "TEXTAREA") return;
+  if (ev.key === "ArrowLeft") ir(cur - 1);
+  if (ev.key === "ArrowRight") { confirmarAtual(); ir(cur + 1); }
+});
 
 function montar() {
   const linhas = [CABECALHO];
-  for (const card of main.querySelectorAll(".card")) {
-    const id = card.dataset.id;
-    const sel = card.querySelector("input:checked");
-    const comp = card.querySelector("textarea").value.trim().replace(/\s*\n\s*/g, " / ");
-    linhas.push(`${id}: ${sel ? sel.value : "(sem resposta)"}${comp ? " — " + comp : ""}`);
+  for (const d of ORDEM) {
+    const e = estado[d.id];
+    const comp = (e.complemento || "").trim().replace(/\s*\n\s*/g, " / ");
+    linhas.push(`${d.id}: ${e.resposta || "(sem resposta)"}${comp ? " — " + comp : ""}`);
   }
   return linhas.join("\n");
 }
-document.getElementById("mostrar").onclick = () => {
-  const s = document.getElementById("saida");
-  s.value = montar(); s.style.display = "block"; s.scrollIntoView({ behavior: "smooth" });
-};
+function mostrarSaida(txt) {
+  let s = document.getElementById("saida");
+  if (!s) { s = document.createElement("textarea"); s.id = "saida"; s.readOnly = true; main.appendChild(s); }
+  s.value = txt; s.style.display = "block"; s.scrollIntoView({ behavior: "smooth" }); return s;
+}
+document.getElementById("mostrar").onclick = () => mostrarSaida(montar());
 document.getElementById("copiar").onclick = async () => {
   const txt = montar();
   const st = document.getElementById("status");
-  try { await navigator.clipboard.writeText(txt); st.textContent = "copiado — cole no terminal"; }
-  catch { const s = document.getElementById("saida"); s.value = txt; s.style.display = "block"; s.select(); st.textContent = "clipboard indisponível: selecione o texto abaixo"; }
+  const pend = ORDEM.filter((d) => !estado[d.id].ok).length;
+  try { await navigator.clipboard.writeText(txt); st.textContent = pend ? `copiado (${pend} não confirmada(s) vão com a recomendada) — cole no terminal` : "copiado — cole no terminal"; }
+  catch { mostrarSaida(txt).select(); st.textContent = "clipboard indisponível: selecione o texto abaixo"; }
 };
+pintar();
 </script>
 </body>
 </html>
