@@ -44,6 +44,9 @@ Se uma informação essencial não puder ser descoberta e mudar materialmente o 
 - Manter setas, rótulos e nós sem sobreposição. Criar espaço vertical antes de alongar conectores através de outros elementos.
 - Diferenciar sucesso, erro e estado neutro por cor sem depender apenas da cor para transmitir significado.
 - Seta com rótulo (`Sim`/`Não`) precisa de no mínimo 60px; texto de losango usa `fontSize: 14` e no máximo duas linhas curtas.
+- Com mais de uma jornada (ex.: consulta, importação CSV, wizard, edição), desenhar uma trilha por jornada, em colunas ou faixas com título, e ligar as trilhas só nos pontos de entrada e saída. Seta que atravessa o canvas inteiro de uma trilha a outra vira um nó de referência ("→ Trilha C") em vez de um conector longo.
+- Nó do fluxo que abre uma página leva o código dela (`P1`, `P2`…), o mesmo que aparece no título do wireframe. Nó que depende de algo que a API não tem leva um marcador `GAP-n` com o id do gap correspondente na área de gaps.
+- Quando houver processamento assíncrono, separar o status de negócio (ex.: configuração `ATIVA`/`INATIVA`) do status de processamento (ex.: `PENDENTE`/`PROCESSANDO`/`APLICADA`/`APLICADA_COM_ERRO`). Mostrar os dois no fluxo e nas telas, nunca um só status misturando os dois.
 
 ## Ligar os elementos
 
@@ -132,7 +135,11 @@ O script liga as pontas de seta à figura mais próxima (até 20px) e vincula o 
 ## Desenhar o frontend
 
 - Representar páginas completas e nunca modais.
-- Usar elementos HTML clássicos sem acoplar o desenho a uma biblioteca React.
+- **Wireframe é desenho, não descrição.** Input, select, botão, radio, checkbox, card, tabela e stepper são figuras com texto vinculado. Um bloco de texto que escreve a tela ("[ Salvar ]", "( ) Todos (•) Por filtro", caixa ASCII) não é protótipo, e o validador avisa quando encontra isso. Uma descrição textual da página pode existir como nota ao lado, nunca no lugar do wireframe.
+- Usar elementos HTML clássicos sem acoplar o desenho a uma biblioteca React. O vocabulário de componentes está em [element-templates.md](references/element-templates.md): cabeçalho do sistema, breadcrumb, stepper, card de resumo, radio, área de upload, tabela com seleção, paginação, aviso/callout e rodapé de ações.
+- Para resumo de configurações ou entidades, preferir cards (nome, badges de status, contagens, ação "Ver") a tabela. Tabela fica para listas de seleção e histórico.
+- Fluxo de criação em várias etapas vira wizard: uma página por passo, com stepper no topo, `Voltar`/`Avançar` no rodapé e uma página final de revisão com `Editar` por seção.
+- Se a jornada pede uma entidade que a API não tem (ex.: um "bloco de configuração" que no back-end é só `Envio → Rotina → Itens`), propor o modelo mental da interface, desenhar a tela em cima dele e registrar a entidade como pendência do back-end. Nunca desenhar como se o contrato já existisse. Quando o fluxo inteiro for proposta, sem contrato, dizer isso no título ("proposta ideal").
 - Incluir breadcrumb, título, campos reais, ajuda contextual e ações de página.
 - Marcar obrigatórios e representar campos condicionais e coleções repetíveis.
 - Criar páginas de confirmação para mudanças de estado ou ações destrutivas.
@@ -155,7 +162,8 @@ O script liga as pontas de seta à figura mais próxima (até 20px) e vincula o 
 - [ ] Fontes cruzadas (runbook × DTO × OpenAPI × código) e divergências registradas como gap.
 - [ ] Áreas presentes: título/escopo/legenda, fluxo, páginas, listagens, gaps.
 - [ ] Fluxo começa em bloco verde; sólido = usuário, tracejado = interno; decisões com saídas rotuladas.
-- [ ] Páginas sem modal, com campos e exemplos reais, obrigatórios marcados e confirmação para ação destrutiva.
+- [ ] Páginas sem modal, desenhadas como figuras (nenhum aviso de protótipo textual), com campos e exemplos reais, obrigatórios marcados e confirmação para ação destrutiva.
+- [ ] Códigos `P1…Pn` batem entre nós do fluxo e títulos das páginas; marcadores `GAP-n` existem na área de gaps.
 - [ ] Listagens com busca, filtros, status, ações por linha e estados (carregando, vazio, sem resultado, falha, 401, 403).
 - [ ] Cores e tamanhos só da paleta.
 - [ ] `validate_excalidraw.py` sem `ERRO`, com cada `AVISO` corrigido ou justificado.
@@ -165,6 +173,7 @@ O script liga as pontas de seta à figura mais próxima (até 20px) e vincula o 
 ## Entregar
 
 - Salvar um `.excalidraw` válido e editável.
-- Informar o caminho absoluto completo.
+- Salvar junto um `.md` com a análise: fontes lidas, endpoints e contratos reais, decisões tomadas com o usuário, gaps por prioridade e o caminho do canvas. É o que preserva o raciocínio quando o canvas for refeito. Se o usuário já tem um documento de análise, atualizar esse em vez de criar outro.
+- Informar sempre o caminho absoluto completo, de cada arquivo.
 - Resumir áreas adicionadas e gaps relevantes, e dizer se o render foi conferido.
 - Não alterar contratos ou código de produção durante uma tarefa apenas de análise, salvo solicitação explícita.

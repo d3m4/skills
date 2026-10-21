@@ -15,7 +15,9 @@ AVISOS (saída 0, ou 1 com --strict) pedem olho no render:
   - seta atravessando uma figura que não é origem nem destino;
   - ponta de seta longe da figura à qual está ligada;
   - texto solto que parece rótulo de figura ou de seta (devia estar vinculado);
-  - textos soltos sobrepostos.
+  - textos soltos sobrepostos;
+  - protótipo textual: texto que escreve controles ("[ Salvar ]", "( ) opção",
+    caixa ASCII) em vez de desenhá-los como figuras.
 
 --fix corrige só o que é mecânico e seguro: acrescenta ao boundElements as
 referências de volta que faltam e remove entradas que apontam para o nada.
@@ -27,6 +29,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -35,6 +38,9 @@ LINEAR = {"arrow", "line"}
 PAD = 5  # BOUND_TEXT_PADDING do Excalidraw
 
 # largura média por caractere / fontSize, medida no Excalidraw 0.18 (minúscula, maiúscula/dígito)
+# sinais de controle de UI escrito como texto: [ Salvar ], ( ) opção, (•), [x], ┌──┐
+TEXT_UI = [re.compile(p) for p in (r"\[ ?[^\]\n]{1,30}? ?\]", r"\(\s?[•x*o ]?\s?\)\s\w", r"[┌┐└┘│─]{2,}", r"_{6,}")]
+
 CHAR_W = {5: (0.52, 0.64), 1: (0.53, 0.64), 2: (0.48, 0.60), 6: (0.48, 0.60), 3: (0.59, 0.59), 8: (0.55, 0.55)}
 
 
@@ -264,6 +270,15 @@ def validate(doc: dict, fix: bool) -> tuple[list[str], list[str], int]:
                 if any(math.hypot(cx - (p[0] + q[0]) / 2, cy - (p[1] + q[1]) / 2) < 45 for p, q in zip(pts, pts[1:])):
                     warns.append(f"{label(t)} parece rótulo de {label(ar)} — vincule com containerId na seta")
                     break
+
+    # protótipo textual: controles escritos em texto em vez de desenhados
+    for t in texts:
+        if t.get("containerId"):
+            continue
+        hits = sum(len(rx.findall(t.get("text") or "")) for rx in TEXT_UI)
+        if hits >= 2:
+            warns.append(f"{label(t)} desenha controles em texto (botão entre colchetes, radio, caixa ASCII) — "
+                         "protótipo textual; desenhe input, botão e radio como figuras")
 
     for i, a in enumerate(free):
         for b in free[i + 1:]:

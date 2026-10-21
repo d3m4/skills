@@ -141,3 +141,24 @@ Para desviar de uma figura, acrescente pontos intermediários: `"points": [[0,0]
 **Página:** moldura `#f8f9fa`. Título, breadcrumb, rótulos de campo e notas são texto solto dentro dela. Uma moldura nunca recebe rótulo vinculado, porque contém muitas coisas.
 
 **Tabela:** um retângulo de cabeçalho (`#e7f5ff`) e um retângulo por linha. As células são texto solto. Badges e botões de ação por linha são figuras com texto vinculado.
+
+## Vocabulário de componentes
+
+Cada componente é desenhado com figuras. Nunca escreva o controle como texto (`[ Salvar ]`, `( ) Todos`).
+
+| Componente | Como desenhar |
+|---|---|
+| Cabeçalho do sistema | faixa de 100% da largura da página, 36px, com nome do sistema à esquerda e usuário/perfil à direita (texto solto) |
+| Breadcrumb | texto solto `#868e96` 13 abaixo do cabeçalho: `Início / Entidade / Ação` |
+| Stepper (wizard) | 1 elipse de 22px por passo com o número vinculado, ligadas por `line`. Passo atual com `#a5d8ff`, concluído com `#d3f9d8` e futuro com `#ffffff`; nome do passo em texto solto abaixo |
+| Card de resumo | retângulo `#ffffff` com título (texto solto 15), badges de status lado a lado, contagens em texto solto e botão secundário `Ver` no canto |
+| Radio | elipse de 14px; a opção marcada ganha uma elipse de 6px `#1e1e1e` dentro. Rótulo em texto solto à direita |
+| Checkbox | quadrado de 18px; o marcado ganha `✓` vinculado |
+| Select | input com placeholder vinculado terminando em `▾` |
+| Área de upload | retângulo `dashed` `#f8f9fa` de 100% da largura, com texto vinculado "Arraste o arquivo ou selecione" e botão secundário `Selecionar arquivo` |
+| Tabela com seleção | cabeçalho `#e7f5ff`; primeira coluna com checkbox por linha; contagem "N selecionados" abaixo |
+| Paginação | botões de 30×26 `‹`, números e `›`, com a página atual em `#d3f9d8` |
+| Aviso/callout | retângulo de 100% da largura: informação `#e7f5ff`/`#1971c2`, atenção `#fff9db`/`#f08c00`, erro `#ffc9c9`/`#e03131`; texto vinculado à esquerda |
+| Rodapé de ações | linha fina separando o rodapé; secundários à esquerda (`Cancelar`, `Voltar`) e primário à direita (`Avançar`, `Salvar`) |
+| Revisão (último passo do wizard) | um card por seção já preenchida, cada um com botão `Editar` que volta ao passo |
+

@@ -41,6 +41,13 @@ Erro e sucesso não podem depender só da cor: o texto do nó diz o que acontece
 | Gap ou necessidade comum | `#1e1e1e` | `#dbe4ff` | `solid` |
 | Decisão de produto em aberto | `#1e1e1e` | `transparent` | `dashed` |
 
+## Rastreabilidade
+
+| Papel | `strokeColor` | `backgroundColor` | Texto |
+|---|---|---|---|
+| Marcador `GAP-n` no fluxo (abaixo do nó, ligado por seta curta) | `#9c36b5` | `#f3d9fa` | `#862e9c` 12 |
+| Código de página `P1…Pn` (no título do wireframe e no nó) | `#1971c2` | `#e7f5ff` | `#1971c2` 12 |
+
 ## Texto
 
 | Uso | Cor | `fontSize` |

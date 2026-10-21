@@ -57,7 +57,7 @@ Os elementos precisam estar ligados entre si, e não apenas posicionados lado a 
 
 ## Páginas e formulários
 
-- Desenhe páginas completas, não modais.
+- Desenhe páginas completas, não modais, com os controles desenhados como figuras. Texto descrevendo a tela (`[ Salvar ]`, `( ) opção`) não substitui o wireframe.
 - Use breadcrumb, título da página, campos, textos de ajuda e ações no rodapé.
 - Use os nomes reais dos campos dos DTOs ou contratos da API.
 - Marque campos obrigatórios com `*`.
@@ -136,6 +136,20 @@ Crie uma área separada no canvas para registrar, no mínimo:
 - ações operacionais que talvez devam ficar restritas a usuários avançados.
 
 Não corrija silenciosamente uma contradição encontrada. Registre-a como gap e indique quais fontes discordam.
+
+Organize os gaps por prioridade e numere cada um (`GAP-1`, `GAP-2`…), para que os marcadores no fluxo apontem para eles:
+
+- `P0`: bloqueia o frontend (entidade ou endpoint inexistente, segurança);
+- `P1`: contrato incompleto ou divergente entre fontes;
+- `P2`: melhoria de escala, UX ou operação.
+
+Mantenha as decisões de produto em aberto num quadro próprio, separado dos gaps técnicos. Quando houver muitas pendências, feche a área com uma linha de estratégia por fases (ex.: "Fase 1: modelo e listagem · Fase 2: edição · Fase 3: CSV").
+
+## Rastreabilidade entre áreas
+
+- Cada página recebe um código (`P1`, `P2`…) no título do wireframe, e o nó do fluxo que leva a ela mostra o mesmo código.
+- Um nó do fluxo que depende de algo ausente na API recebe um marcador `GAP-n` apontando para o gap correspondente.
+- O `.md` de análise entregue junto com o canvas usa os mesmos códigos.
 
 ## Preservação de versões editadas
 
