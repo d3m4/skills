@@ -138,7 +138,11 @@
     .phase h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
     .phase .num-badge { color: var(--accent); font-weight: 700; }
     .slices { list-style: none; padding: 0; margin: .5rem 0 0; display: grid; gap: .35rem; }
-    .slices li { display: flex; gap: .5rem; align-items: baseline; font-size: .9rem; color: var(--pico-muted-color); }
+    .slices li { display: flex; gap: .55rem; align-items: baseline; font-size: .9rem; color: var(--pico-muted-color); }
+    .slices li > code:first-child { flex: none; }
+    .slices .body { display: grid; gap: .2rem; }
+    .slices .note { font-size: .8rem; opacity: .72; line-height: 1.45; }
+    .slices .note.flag { opacity: 1; color: var(--warn); }
     .slices code { font-size: .78rem; background: var(--pico-code-background-color); padding: .05rem .35rem; border-radius: 5px; color: var(--accent-2); }
 
     /* Callout */
@@ -270,8 +274,14 @@
           <div class="phase">
             <h3><span class="num-badge">Fase 1</span> · {{NOME_FASE}} <i class="bi bi-shield"></i></h3>
             <ul class="slices">
-              <li><code>1.0</code> {{ETAPA}}</li>
-              <li><code>1.1</code> {{ETAPA}}</li>
+              <li><code>1.0</code><div class="body">
+                  <span>{{ETAPA_ACAO_CURTA}}</span>
+                </div></li>
+              <li><code>1.1</code><div class="body">
+                  <span>{{ETAPA_ACAO_CURTA}}</span>
+                  <span class="note">{{DETALHE_OPCIONAL}}</span>
+                  <span class="note flag">{{ALERTA_OPCIONAL}}</span>
+                </div></li>
             </ul>
           </div>
           <div class="phase">

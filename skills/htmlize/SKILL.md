@@ -52,8 +52,25 @@ Mobile-first com largura fluida + media queries. Não trave o conteúdo numa lar
 - [ ] **Tabela**: **sempre** dentro de `<div class="tabela">`, que dá `overflow-x: auto`. Sem o wrapper, uma tabela larga estoura a viewport no celular e o `<body>` inteiro passa a rolar na horizontal. Nota de rodapé da tabela usa `<p class="nota">`.
 - [ ] **Código**: `<pre><code>…</code></pre>`.
 - [ ] **Callout**: `.callout` para pontos críticos (vermelho). Variantes `.callout.ok` (verde) e `.callout.warn` (amarelo).
-- [ ] **Timeline**: `.timeline` vertical com `.phase`; itens em `.slices` com `<code>` de numeração (`1.0`, `2.1`…).
+- [ ] **Timeline**: `.timeline` vertical com `.phase`; itens em `.slices` com `<code>` de numeração (`1.0`, `2.1`…). Ver **Anatomia de um passo** abaixo.
 - [ ] **Rodapé**: `.muted-foot` com proveniência (arquivo de origem + crédito "PicoCSS + Bootstrap Icons").
+
+## Anatomia de um passo (timeline)
+
+Um passo é **uma ação atômica que cabe numa linha**. Nunca um parágrafo.
+
+```html
+<li><code>1.4</code><div class="body">
+    <span>Ação curta, imperativa: onde clicar e o que copiar.</span>
+    <span class="note">Detalhe, contexto ou ressalva — opcional.</span>
+    <span class="note flag">Alerta de erro clássico — opcional.</span>
+  </div></li>
+```
+
+- Se a frase precisa de **"e" / "mas" / "além disso"**, quebre em outro passo numerado, não estenda o atual.
+- Detalhe, ressalva, prazo de depreciação e explicação vão na `.note` (menor, apagada) — nunca embutidos na linha principal.
+- Erro fácil de cometer (URL trocada, campo errado) vira `.note.flag`, em laranja.
+- Uma fase com 7 passos curtos lê melhor que uma com 4 parágrafos. Prefira mais passos.
 
 ## Mapeamento de conteúdo → componente
 
